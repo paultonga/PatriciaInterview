@@ -76,8 +76,9 @@ function* facebook() {
 function* google() {
   try {
     const response = yield googleLogin();
-    if (response.error) {
-      yield put({ type: Types.ERROR, payload: { error: response.error } });
+    if (response.error || !response.token) {
+      const err = response.error || "Could not complete your request."
+      yield put({ type: Types.ERROR, payload: { error: err } });
     } else {
       const { user, token } = response;
       yield put({ type: Types.SUCCESS, payload: { token, user } });
